@@ -1,0 +1,18 @@
+{
+  "id": "ai-value",
+  "domain": "ai",
+  "columns": [
+    { "key": "useCase", "label": "Live use case" },
+    { "key": "baseline", "label": "Baseline" },
+    { "key": "basis", "label": "Benefit is", "type": "basis" },
+    { "key": "annualK", "label": "Annual benefit", "type": "usd_k", "align": "right" }
+  ],
+  "rows": [
+    { "useCase": "Claims triage", "baseline": "Documented", "basis": "Measured", "annualK": 700 },
+    { "useCase": "Contract review", "baseline": "Documented", "basis": "Measured", "annualK": 600 },
+    { "useCase": "Support deflection", "baseline": "Not documented", "basis": "Estimated", "annualK": 520 },
+    { "useCase": "Code assistant", "baseline": "Not documented", "basis": "Estimated", "annualK": 480 },
+    { "useCase": "Demand forecasting", "baseline": "Not documented", "basis": "Estimated", "annualK": 360 },
+    { "useCase": "Document search", "baseline": "Not documented", "basis": "Estimated", "annualK": 280 }
+  ]
+}

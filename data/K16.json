@@ -1,0 +1,27 @@
+{
+  "kpi": "K16",
+  "domain": "service",
+  "asOf": "2026-10-12",
+  "owner": "Operations",
+  "source": "Monitoring export · MON-12W",
+  "values": {
+    "policy": { "caution": 75, "over": 100 }
+  },
+  "metrics": {
+    "target": { "label": "Availability target", "unit": "pct", "decimals": 2, "value": 99.95, "status": "neutral" },
+    "paymentsAvailability": { "label": "Payments availability", "unit": "pct", "decimals": 2,
+      "value": { "derive": "lookup", "dataset": "availability", "matchKey": "service", "match": "Payments", "key": "value" },
+      "status": "bad" },
+    "paymentsBudgetUsed": { "label": "Payments error budget used", "unit": "pct", "decimals": 0,
+      "value": { "derive": "budgetUsed", "dataset": "availability", "matchKey": "service", "match": "Payments", "key": "value", "targetMetric": "target" },
+      "status": "bad" },
+    "servicesMeetingSla": { "label": "Critical services meeting SLA", "unit": "text",
+      "value": { "derive": "countMeeting", "dataset": "availability", "key": "value", "op": "gte", "targetMetric": "target" },
+      "prior": "3 of 4", "targetText": "Target {{K16:target}}", "status": "bad",
+      "note": "Critical services whose availability over the last 12 weeks meets the {{K16:target}} target." },
+    "overBudget": { "label": "Services over their error budget", "unit": "text",
+      "value": { "derive": "overBudgetText", "dataset": "availability", "key": "value", "targetMetric": "target", "limit": 100 },
+      "prior": "1 of 4", "status": "bad",
+      "note": "The error budget is the downtime a service may have under its target. A service that has used more than 100% of it is out of budget. The practice from Google's SRE book is to freeze non-essential releases until reliability work restores the budget. The service owner decides." }
+  }
+}

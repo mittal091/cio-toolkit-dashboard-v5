@@ -1,0 +1,40 @@
+{
+  "kpi": "K06",
+  "domain": "cost",
+  "asOf": "2026-10-12",
+  "owner": "IT Finance",
+  "source": "General ledger · GL-1026",
+  "series": {
+    "monthlyActual": {
+      "name": "Actual", "unit": "usd_m", "decimals": 1,
+      "labels": ["Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+      "values": [9.8, 10.1, 10.2, 10.3, 10.3, 10.7]
+    },
+    "monthlyBudget": {
+      "name": "Plan", "unit": "usd_m", "decimals": 1,
+      "labels": ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"],
+      "values": [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+    }
+  },
+  "metrics": {
+    "budgetYtd": { "label": "Budget vs actual", "unit": "pct", "decimals": 1, "signed": true,
+      "value": { "derive": "pctVs", "series": "monthlyActual", "base": "monthlyBudget", "upTo": 5 },
+      "prior": { "derive": "pctVs", "series": "monthlyActual", "base": "monthlyBudget", "upTo": 4 },
+      "polarity": "down", "status": "warn",
+      "note": "Year-to-date spend is {{K06:ytdActual}} against a plan of {{K06:ytdBudget}}. Finance owns the budget figure and IT owns the explanation." },
+    "ytdActual": { "label": "Actual, year to date", "unit": "usd_m", "decimals": 1,
+      "value": { "derive": "sum", "series": "monthlyActual" }, "status": "neutral" },
+    "ytdBudget": { "label": "Plan, year to date", "unit": "usd_m", "decimals": 1,
+      "value": { "derive": "sum", "series": "monthlyBudget", "upTo": 5 }, "status": "neutral" },
+    "fullYearPlan": { "label": "Plan, full year", "unit": "usd_m", "decimals": 1,
+      "value": { "derive": "sum", "series": "monthlyBudget" }, "status": "neutral" },
+    "landing": { "label": "Year-end landing", "unit": "usd_m", "decimals": 1,
+      "value": { "derive": "landing", "series": "monthlyActual", "months": 6, "window": 3 },
+      "prior": 123.4, "polarity": "down", "status": "warn",
+      "targetText": "Plan {{K06:fullYearPlan}}",
+      "note": "Where the year is heading: actual to date plus the last three months' average for the six months still to come. It is a rolling, trend-based forecast. The arrow shows how far the forecast has moved since last month. Forecast accuracy cannot be tracked until a few months of forecasts have been saved." },
+    "landingVsPlan": { "label": "Landing vs plan", "unit": "pct", "decimals": 1, "signed": true,
+      "value": { "derive": "landingVsPlan", "series": "monthlyActual", "plan": "monthlyBudget", "months": 6, "window": 3 },
+      "status": "warn" }
+  }
+}

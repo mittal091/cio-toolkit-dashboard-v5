@@ -1,0 +1,17 @@
+{
+  "id": "cloud-waterfall",
+  "domain": "cost",
+  "columns": [
+    { "key": "label", "label": "Step" },
+    { "key": "kind", "label": "Kind" },
+    { "key": "value", "label": "$k", "align": "right" }
+  ],
+  "rows": [
+    { "label": "Week 8", "kind": "total", "value": 192 },
+    { "label": "Payments API compute", "kind": "delta", "value": 61 },
+    { "label": "Data lake storage", "kind": "delta", "value": 12 },
+    { "label": "Scaling rule partly reversed", "kind": "delta", "value": -48 },
+    { "label": "Storage clean-up", "kind": "delta", "value": -12 },
+    { "label": "Week 12", "kind": "total", "value": 205 }
+  ]
+}

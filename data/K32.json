@@ -1,0 +1,32 @@
+{
+  "kpi": "K32",
+  "domain": "ai",
+  "asOf": "2026-10-12",
+  "owner": "Data and AI lead",
+  "source": "AI usage logs · AI-012",
+  "values": {
+    "users": { "previous": 1137, "current": 1240 }
+  },
+  "metrics": {
+    "activeUsers": { "label": "Active AI users", "unit": "count",
+      "value": { "derive": "pick", "values": "users", "key": "current" },
+      "prior": { "derive": "pick", "values": "users", "key": "previous" },
+      "polarity": "up", "status": "good",
+      "note": "Users active in the last 28 days, compared with the 28 days before." },
+    "growth": { "label": "Active users, 4-week change", "unit": "pct", "decimals": 0, "signed": true,
+      "value": { "derive": "pctChangeBetween", "values": "users", "from": "previous", "to": "current" }, "status": "good" },
+    "growthPct": { "label": "Active users, 4-week growth", "unit": "pct", "decimals": 0,
+      "value": { "derive": "pctChangeBetween", "values": "users", "from": "previous", "to": "current" }, "status": "good" },
+    "measuredBenefit": { "label": "Use cases with a measured benefit", "unit": "text",
+      "value": { "derive": "ofTextRows", "dataset": "ai-value", "key": "basis", "equals": "Measured" },
+      "prior": "1 of 6", "status": "warn",
+      "note": "Live use cases whose benefit is measured against a documented baseline. The rest is estimated, which is weak evidence." },
+    "measuredValue": { "label": "AI benefit, measured", "unit": "usd_m", "decimals": 1,
+      "value": { "derive": "sumWhere", "dataset": "ai-value", "key": "annualK", "whereKey": "basis", "equals": "Measured", "scale": 0.001 },
+      "prior": 1.1, "polarity": "up", "status": "warn",
+      "note": "Annual benefit from the live use cases that are measured against a baseline. Another {{K32:estimatedValue}} a year is estimated and not yet proven. Spend and benefit are shown together because rising AI spend is only acceptable if value rises with it." },
+    "estimatedValue": { "label": "AI benefit, estimated", "unit": "usd_m", "decimals": 1,
+      "value": { "derive": "sumWhere", "dataset": "ai-value", "key": "annualK", "whereKey": "basis", "equals": "Estimated", "scale": 0.001 },
+      "status": "neutral" }
+  }
+}
