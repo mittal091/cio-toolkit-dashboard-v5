@@ -2,7 +2,7 @@
   "kpi": "X01",
   "proposed": true,
   "domain": "delivery",
-  "asOf": "2026-10-12",
+  "asOf": "2026-10-19",
   "owner": "Engineering",
   "source": "Deployment and incident log · CD-309, INC-228",
   "series": {

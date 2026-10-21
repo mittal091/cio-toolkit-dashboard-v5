@@ -176,9 +176,9 @@ try {
   ok('board pack lists three decisions from the log and discloses the forecast and the proposed KPI', pack.querySelectorAll('.pack ol li').length === 3 && body.includes('Confirm patch window this week') && body.includes('trend-based forecast') && body.includes('proposed KPI'));
 
   /* ================= accessibility refinements ================= */
-  ok('data as-of date is available', D.dataAsOf() === '12 Oct 2026');
+  ok('data as-of date is available', D.dataAsOf() === '19 Oct 2026');
   const evq = D.getEvidence('K20', 'criticalOpen', ROLE);
-  ok('evidence lists who can see the KPI and a formatted as-of date', evq.visibleTo.join('|') === 'CIO office|CISO, Risk and Compliance' && evq.asOf === '12 Oct 2026');
+  ok('evidence lists who can see the KPI and a formatted as-of date', evq.visibleTo.join('|') === 'CIO office|CISO, Risk and Compliance' && evq.asOf === '19 Oct 2026');
   const aiCases = [['K17', 'incidentsW12', 'AI does real work here'], ['K06', 'budgetYtd', 'a person checks the result'], ['K16', 'servicesMeetingSla', 'only a small part'], ['K05', 'itSpendPct', 'no AI involved']];
   ok('evidence dialog explains the AI position in plain words (High, Medium, Low, None)', aiCases.every(([k, m, s]) => evidenceDialog(D.getEvidence(k, m, ROLE)).includes(s)));
   ok('highlighted incident bar and latest bar carry their numbers', [...text(render('ops')).querySelectorAll('.chart svg text')].some(t => t.textContent === '19') && [...text(render('ops')).querySelectorAll('.chart svg text')].some(t => t.textContent === '14'));
@@ -200,6 +200,20 @@ try {
   ok('control borders meet 3:1 against the panel background', ratio(tok('ctrl'), tok('panel2')) >= 3 && ratio(tok('ctrl'), tok('panel')) >= 3);
   ok('chart series colours meet 3:1 (blue, cyan, purple, amber, green, red on the panel)', ['blue', 'cyan', 'purple', 'amber', 'green', 'red'].every(n => ratio(tok(n), tok('panel')) >= 3));
 
+  /* ================= the page itself: name, link preview, skip link, demo dates ================= */
+  const page = await (await fetch('../index.html')).text();
+  const head = text(page);
+  ok('page title is "CIO Toolkit Dashboard"', head.title === 'CIO Toolkit Dashboard');
+  ok('link preview tags are present (title, description, image, size) for Teams and other chat tools',
+    ['og:title', 'og:description', 'og:image', 'og:url', 'og:image:width'].every(p => head.querySelector(`meta[property="${p}"]`) && head.querySelector(`meta[property="${p}"]`).content) &&
+    head.querySelector('meta[property="og:title"]').content === 'CIO Toolkit Dashboard' && head.querySelector('meta[property="og:image"]').content.endsWith('/og-image.png') && !!head.querySelector('meta[name="description"]').content);
+  ok('the preview image exists', (await fetch('../og-image.png')).ok);
+  ok('a skip link jumps to the content panel', head.querySelector('a.skip') && head.querySelector('a.skip').getAttribute('href') === '#view' && head.getElementById('view').getAttribute('tabindex') === '-1');
+  ok('the favicon is set, so browsers do not request a missing file', !!head.querySelector('link[rel="icon"]'));
+  const decisions = D.getDataset('attention', ROLE).rows.map(r => r.due);
+  const parse = s => { const [d, m, y] = s.split(' '); return new Date(`${m} ${d}, ${y}`); };
+  const asOfDate = new Date('2026-10-19');
+  ok('every decision is due after the data date, so nothing looks overdue on first view', decisions.every(s => parse(s) > asOfDate), decisions.join(', '));
   const dash = String.fromCharCode(0x2014);
   ok('no em dash in any rendered view', views.every(v => !renderView(v, ROLE).includes(dash)));
   ok('escapeHtml neutralises markup', !escapeHtml('<img src=x onerror=alert(1)>').includes('<'));

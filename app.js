@@ -37,6 +37,7 @@ function show(id) {
   const views = D.viewsFor(role);
   const v = views.find(x => x.id === id) || views[0];
   currentId = v.id;
+  document.title = `${v.name} · CIO Toolkit Dashboard`; // the tab and browser history name the view
 
   let lastGroup = null;
   tabsEl.innerHTML = views.map((x, i) => {
@@ -82,6 +83,7 @@ tabsEl.addEventListener('keydown', e => {
 document.addEventListener('click', e => {
   const t = e.target;
   if (t === dialogEl) return closeDialog(); // click on the backdrop
+  if (t.closest && t.closest('a.skip')) { e.preventDefault(); viewEl.focus(); return; } // keep the deep link in the address bar
   const b = t.closest && t.closest('button');
   if (!b) return;
 

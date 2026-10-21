@@ -92,10 +92,18 @@ const key = (w, el, k) => el.dispatchEvent(new w.KeyboardEvent('keydown', { key:
     const jump = dd.querySelector('[data-askjump]'); jump.click(); await wait(500);
     ok('Ask a question jumps to the Ask panel and focuses its input', dd.activeElement === dd.querySelector('[data-ask] input'), dd.activeElement.tagName);
     ok('the active-view pill is gone (the tab already says it)', !dd.body.textContent.includes('Viewing: '));
+    // ---- page name and keyboard bypass ----
+    f = await load('#fin'); d = f.contentDocument; w = f.contentWindow;
+    ok('the tab title names the view and the dashboard', d.title === 'Finance and FinOps · CIO Toolkit Dashboard', d.title);
+    tabs()[0].focus(); key(w, d.activeElement, 'End'); await wait(150);
+    ok('the title follows the view when the view changes', d.title === 'Board pack · CIO Toolkit Dashboard', d.title);
+    const hashBefore = w.location.hash;
+    d.querySelector('a.skip').click(); await wait(150);
+    ok('the skip link moves focus to the content panel without changing the deep link', d.activeElement === d.getElementById('view') && w.location.hash === hashBefore, d.activeElement.tagName + ' ' + w.location.hash);
     // ---- board pack ----
     f = await load('#pack'); d = f.contentDocument;
     ok('board pack renders with Print and Download controls', !!d.getElementById('print-pack') && !!d.getElementById('download-pack') && d.querySelector('.pack').innerText.length > 800);
-    ok('bar shows the data as-of date on every view', d.body.textContent.includes('Data as of: 12 Oct 2026'));
+    ok('bar shows the data as-of date on every view', d.body.textContent.includes('Data as of: 19 Oct 2026'));
 
     // ---- Ask ----
     f = await load('#fin'); d = f.contentDocument; w = f.contentWindow;

@@ -223,9 +223,13 @@ h1{margin:4px 0 2px}
 .ebv b{color:var(--ink);font-variant-numeric:tabular-nums}
 .ebact{grid-column:2 / -1;font-size:12px;color:var(--amber)}
 @media(max-width:640px){.ebrow{grid-template-columns:minmax(0,1fr)}.ebv{justify-content:flex-start}.ebact{grid-column:auto}}
+/* skip link for keyboard users (WCAG 2.4.1) */
+.skip{position:absolute;left:-9999px;top:8px;z-index:30;background:var(--panel);color:var(--ink);padding:8px 14px;border:1px solid var(--cyan);border-radius:8px;font-weight:600;font-size:13px}
+.skip:focus{left:12px}
+#view:focus{outline:none}
 @media print{
   body{background:#fff !important;color:#111 !important;padding-inline:0}
-  .top,.lede,h1,.steps,.road,.tabs,.bar,.meta,.foot,.no-print,#toast,dialog{display:none !important}
+  .skip,.top,.lede,h1,.steps,.road,.tabs,.bar,.meta,.foot,.no-print,#toast,dialog{display:none !important}
   .wrap{max-width:none;padding-block:0}
   .panel{background:#fff !important;border:0 !important;color:#111 !important}
   .pack{max-width:none;padding:0}
