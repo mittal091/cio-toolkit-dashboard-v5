@@ -1,7 +1,7 @@
 import { escapeHtml as esc } from '../format.js';
 
 export function ask({ viewId, suggested }) {
-  return `<div class="panel" data-ask="${esc(viewId)}"><h3>Ask the dashboard</h3><p class="sub">Answers show their sources. No source, no answer.</p>
+  return `<div class="panel" data-ask="${esc(viewId)}"><h3>Ask the dashboard</h3><p class="sub">Answers cite their sources.</p>
   <div class="ask"><div class="qs">${suggested.map(x => `<button class="q" data-q="${esc(x.id)}">${esc(x.q)}</button>`).join('')}
   <form class="askf"><input type="text" placeholder="Type a question" aria-label="Type a question"><button type="submit">Ask</button></form></div>
   <div class="ans" aria-live="polite"><div class="h">Answer</div><p style="color:var(--dim)">Pick a question or type your own.</p></div></div></div>`;

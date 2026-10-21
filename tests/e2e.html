@@ -34,7 +34,7 @@ const key = (w, el, k) => el.dispatchEvent(new w.KeyboardEvent('keydown', { key:
     // ---- evidence dialog ----
     const tile = d.querySelector('button.tile'); tile.focus(); tile.click(); await wait(200);
     const dlg = d.getElementById('detail');
-    ok('clicking a tile opens a modal dialog with its evidence', dlg.open && dlg.querySelector('h2').textContent.length > 0 && dlg.textContent.includes('Source and accountability') && dlg.textContent.includes('Visible to'));
+    ok('clicking a tile opens a modal dialog with its evidence', dlg.open && dlg.querySelector('h2').textContent.length > 0 && dlg.textContent.includes('Owner:') && dlg.textContent.includes('Source:') && dlg.textContent.includes('More detail') && dlg.textContent.includes('Visible to'));
     ok('dialog is labelled by its title', dlg.getAttribute('aria-labelledby') === 'detail-title' && !!d.getElementById('detail-title'));
     dlg.dispatchEvent(new w.Event('cancel', { cancelable: true })); dlg.close(); await wait(150);
     ok('closing returns focus to the tile that opened it', d.activeElement === tile, d.activeElement.tagName + '.' + d.activeElement.className);
@@ -43,7 +43,7 @@ const key = (w, el, k) => el.dispatchEvent(new w.KeyboardEvent('keydown', { key:
     ok('clicking the backdrop closes the dialog', !dlg.open);
     // decision dialog from the attention table
     const rowbtn = d.querySelector('.rowbtn'); rowbtn.click(); await wait(150);
-    ok('selecting an attention item opens the decision dialog', dlg.open && dlg.textContent.includes('Intended outcome') && dlg.textContent.includes('EXECUTIVE DECISION'));
+    ok('selecting an attention item opens the decision dialog', dlg.open && dlg.textContent.includes('Intended outcome') && dlg.textContent.includes('Owner:') && dlg.textContent.includes('Due:') && dlg.querySelector('h2').textContent.length > 0);
     d.getElementById('close').click(); await wait(100);
     ok('the Close button closes the dialog', !dlg.open);
 
@@ -88,7 +88,7 @@ const key = (w, el, k) => el.dispatchEvent(new w.KeyboardEvent('keydown', { key:
     fr = await loadSized('#actions', 1366, 768); dd = fr.contentDocument;
     ok('the Ask jump link is hidden on views that have no Ask panel', !dd.querySelector('[data-askjump]'));
     fr = await loadSized('#fin', 1366, 768); dd = fr.contentDocument;
-    ok('views with tiles explain the change arrows in one short line', dd.getElementById('meta').textContent.includes('change since the previous week or month'));
+    ok('views with tiles explain the change arrows in one short line', dd.getElementById('meta').textContent.includes('vs previous period'));
     const jump = dd.querySelector('[data-askjump]'); jump.click(); await wait(500);
     ok('Ask a question jumps to the Ask panel and focuses its input', dd.activeElement === dd.querySelector('[data-ask] input'), dd.activeElement.tagName);
     ok('the active-view pill is gone (the tab already says it)', !dd.body.textContent.includes('Viewing: '));
@@ -103,7 +103,7 @@ const key = (w, el, k) => el.dispatchEvent(new w.KeyboardEvent('keydown', { key:
     // ---- board pack ----
     f = await load('#pack'); d = f.contentDocument;
     ok('board pack renders with Print and Download controls', !!d.getElementById('print-pack') && !!d.getElementById('download-pack') && d.querySelector('.pack').innerText.length > 800);
-    ok('bar shows the data as-of date on every view', d.body.textContent.includes('Data as of: 19 Oct 2026'));
+    ok('bar shows the data as-of date on every view', d.body.textContent.includes('Data as of 19 Oct 2026'));
 
     // ---- Ask ----
     f = await load('#fin'); d = f.contentDocument; w = f.contentWindow;

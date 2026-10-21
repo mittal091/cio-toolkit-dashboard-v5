@@ -2,8 +2,8 @@
   "id": "attention",
   "access": ["cio"],
   "columns": [
-    { "key": "item", "label": "Item", "type": "badge_text", "opens": "action" },
-    { "key": "owner", "label": "Owner" },
+    { "key": "item", "label": "Item", "type": "badge_text", "opens": "action", "wide": true },
+    { "key": "owner", "label": "Owner", "hideSmall": true },
     { "key": "step", "label": "First step", "hideSmall": true },
     { "key": "outcome", "label": "Intended outcome" },
     { "key": "due", "label": "Due" },

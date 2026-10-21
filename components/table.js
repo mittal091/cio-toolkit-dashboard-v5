@@ -36,7 +36,7 @@ function footerHtml(footer) {
 }
 
 export function table({ columns, rows, footnote, footer }) {
-  const cls = c => [c.align === 'right' ? 'r' : '', c.hideSmall ? 'hs' : ''].filter(Boolean).join(' ');
+  const cls = c => [c.align === 'right' ? 'r' : '', c.hideSmall ? 'hs' : '', c.wide ? 'wide' : ''].filter(Boolean).join(' ');
   const head = columns.map(c => `<th class="${cls(c)}">${esc(c.label)}</th>`).join('');
   const body = rows.map(r => `<tr>${columns.map(c => `<td class="${cls(c)}">${cell(c, r[c.from || c.key], r)}</td>`).join('')}</tr>`).join('');
   return `<div class="tw"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>` +

@@ -11,7 +11,7 @@ The page loads JSON with `fetch`, so it needs a web server (opening the file dir
 ## What is in it
 - Role views: CIO cockpit, Finance, Operations, Delivery, Security, AI and Data
 - Act group: Decision log (editable status, saved in the browser) and Board pack (printable draft)
-- Every tile shows status, the change since the previous week or month, and a target or owner. Select a tile for its evidence, where the AI position of the KPI is explained
+- Every tile shows status and the change since the previous period. Select a tile for its evidence (owner, source, and more detail, including the AI position of the KPI)
 - A briefing banner at the top of each view. "Ask a question" jumps to the Ask panel
 - Ask the dashboard answers with sources, or refuses by role
 - Accessibility: keyboard tabs (arrow keys), text status on everything, contrast-tested colours. See docs/RESEARCH.md for the research behind these choices

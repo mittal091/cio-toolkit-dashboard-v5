@@ -31,7 +31,6 @@
     "landing": { "label": "Year-end landing", "unit": "usd_m", "decimals": 1,
       "value": { "derive": "landing", "series": "monthlyActual", "months": 6, "window": 3 },
       "prior": 123.4, "polarity": "down", "status": "warn",
-      "targetText": "Plan {{K06:fullYearPlan}}",
       "note": "Where the year is heading: actual to date plus the last three months' average for the six months still to come. It is a rolling, trend-based forecast. The arrow shows how far the forecast has moved since last month. Forecast accuracy cannot be tracked until a few months of forecasts have been saved." },
     "landingVsPlan": { "label": "Landing vs plan", "unit": "pct", "decimals": 1, "signed": true,
       "value": { "derive": "landingVsPlan", "series": "monthlyActual", "plan": "monthlyBudget", "months": 6, "window": 3 },

@@ -227,6 +227,16 @@ h1{margin:4px 0 2px}
 .skip{position:absolute;left:-9999px;top:8px;z-index:30;background:var(--panel);color:var(--ink);padding:8px 14px;border:1px solid var(--cyan);border-radius:8px;font-weight:600;font-size:13px}
 .skip:focus{left:12px}
 #view:focus{outline:none}
+/* ---------- final: simpler chrome ---------- */
+.top h1{margin:0}
+.top{margin-bottom:10px}
+button.tile::after{content:"\203A";position:absolute;top:8px;right:14px;color:var(--dim);font-size:20px;line-height:1}
+.tile .l{padding-right:20px}
+.meta .askjump{margin-left:auto}
+.tw .wide{min-width:410px}
+@media(max-width:640px){.tw .wide{min-width:0}}
+.more summary{cursor:pointer;color:var(--cyan);font-size:13px;margin-top:14px;padding:4px 0}
+.more[open] summary{margin-bottom:8px}
 @media print{
   body{background:#fff !important;color:#111 !important;padding-inline:0}
   .skip,.top,.lede,h1,.steps,.road,.tabs,.bar,.meta,.foot,.no-print,#toast,dialog{display:none !important}

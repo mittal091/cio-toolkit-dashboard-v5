@@ -4,7 +4,7 @@ import { badge } from './badge.js';
 const STATE = {
   ok: { text: 'Within budget', tone: 'green', action: '' },
   caution: { text: 'Caution', tone: 'amber', action: 'Slow risky releases' },
-  over: { text: 'Over budget', tone: 'red', action: 'Freeze non-essential releases until the budget is restored' }
+  over: { text: 'Over budget', tone: 'red', action: 'Freeze non-essential releases' }
 };
 const SCALE = 250; // the bar runs to 250% so an overspent budget is visible, with a marker at 100%
 

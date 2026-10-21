@@ -37,7 +37,7 @@ function renderTile(item, ctx) {
     sub,
     status: item.status || m.status,
     delta: m.delta,
-    foot: m.targetText || (m.owner ? 'Owner: ' + m.owner : ''),
+    foot: m.targetText || '',
     trend: m.trend
   });
 }

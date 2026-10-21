@@ -31,9 +31,9 @@ try {
     tileRefs.filter(t => t.view === 'cockpit').map(t => `${t.kpi}:${t.metric}`).join() === 'K03:onTime,K06:landing,K32:measuredValue,K05:itSpendPct');
   const cockpit = text(render('cockpit'));
   const order = [...cockpit.body.children].map(e => e.className.split(' ')[0] + ':' + ((e.querySelector('h3') || e.querySelector('h2') || {}).textContent || '')).join(' | ');
-  ok('cockpit order: banner, Outcomes, tiles, decisions, Drivers, error budget, one event, Ask',
-    /briefing.*sec-h:Outcomes.*tiles.*Needs your attention.*sec-h:Drivers.*error budget used.*One event.*Ask the dashboard/.test(order), order);
-  ok('section labels are phrased as questions', [...cockpit.querySelectorAll('.sec-h span')].map(e => e.textContent).join('|') === 'Are we winning?|Is the machine running?');
+  ok('cockpit order: banner, outcome tiles, decisions, error budget, one event, Ask',
+    /briefing.*tiles.*Needs your attention.*error budget used.*One event.*Ask the dashboard/.test(order), order);
+  ok('no section labels or instruction line add commentary to the cockpit', cockpit.querySelectorAll('.sec-h').length === 0);
   ok('every view opens with a message (a headline in the banner), before any number', views.filter(v => hasTiles(v)).every(v => { const c = text(render(v.id)).body.children; return [...c].findIndex(e => e.classList.contains('briefing')) <= 1; }));
 
   /* ================= IBCS: titles carry measure, unit and period ================= */
@@ -49,7 +49,7 @@ try {
   ok('ops shows four services with their budget used in words and numbers', eb.length === 4 && ['240%', '120%', '60%', '20%'].every((p, i) => eb[i].textContent.includes(p + ' used')), eb.map(e => e.textContent.slice(0, 40)).join('|'));
   ok('over-budget services say Over budget and the freeze action in text', eb.slice(0, 2).every(e => e.textContent.includes('Over budget') && e.textContent.includes('Freeze non-essential releases')) && eb.slice(2).every(e => e.textContent.includes('Within budget') && !e.textContent.includes('Freeze')));
   ok('services over budget: 2 of 4', M('K16', 'overBudget').valueText === '2 of 4');
-  ok('the release policy and its owner are stated', text(render('cockpit')).body.textContent.includes('freeze non-essential releases until reliability work restores it') && text(render('cockpit')).body.textContent.includes('The service owner decides'));
+  ok('the release rule and who decides are explained in the detail pop-up, not on the page', evidenceDialog(D.getEvidence('K16', 'overBudget', ROLE)).includes('freeze non-essential releases until reliability work restores the budget') && evidenceDialog(D.getEvidence('K16', 'overBudget', ROLE)).includes('The service owner decides') && !text(render('cockpit')).body.textContent.includes('Google SRE'));
   ok('attention list leads with the error budget, not a bare availability figure', D.getDataset('attention', ROLE).rows[1].item.text === 'Payments has used 240% of its error budget');
 
   /* ================= forecast and plan (FinOps, TBM, IBCS notation) ================= */
@@ -90,7 +90,7 @@ try {
   ok('AI benefit measured $1.3M, estimated $1.6M, annualised spend $2.50M', M('K32', 'measuredValue').valueText === '$1.3M' && M('K32', 'estimatedValue').valueText === '$1.6M' && M('K35', 'annualised').valueText === '$2.50M');
   ok('2 of 6 live use cases are measured, and the live count comes from the register (6)', M('K32', 'measuredBenefit').valueText === '2 of 6' && M('K31', 'live').valueText === '6' && M('K31', 'useCases').valueText === '41');
   const ai = text(render('ai'));
-  ok('AI view pairs spend with value and labels each benefit Measured or Estimated', ai.body.textContent.includes('Only $1.3M a year of benefit is measured') && ai.body.textContent.includes('$2.50M a year of AI spend') && [...ai.querySelectorAll('.b')].filter(b => b.textContent === 'Measured').length === 2 && [...ai.querySelectorAll('.b')].filter(b => b.textContent === 'Estimated').length === 4);
+  ok('AI view pairs spend with value and labels each benefit Measured or Estimated', ai.body.textContent.includes('$1.3M a year of benefit is measured') && ai.body.textContent.includes('$2.50M a year of AI spend') && [...ai.querySelectorAll('.b')].filter(b => b.textContent === 'Measured').length === 2 && [...ai.querySelectorAll('.b')].filter(b => b.textContent === 'Estimated').length === 4);
 
   /* ================= tiles: evidence, deltas, priors ================= */
   const missing = [];
@@ -132,7 +132,7 @@ try {
     const doc = text(render(v.id));
     const tiles = [...doc.querySelectorAll('.tiles .tile')];
     ok(`${v.id}: four tiles, all buttons that open evidence`, tiles.length === 4 && tiles.every(t => t.tagName === 'BUTTON' && t.dataset.ev && t.getAttribute('aria-label')));
-    ok(`${v.id}: every tile shows a status pill and a footer`, tiles.every(t => t.querySelector('.tf .b') && t.querySelector('.tf span').textContent.trim().length > 0));
+    ok(`${v.id}: every tile shows a status pill`, tiles.every(t => t.querySelector('.tf .b')));
     ok(`${v.id}: has a banner with a headline`, !!doc.querySelector('.briefing h2'));
   }
   ok('tiles carry no AI badge and no catalogue IDs in their sub-lines', views.every(v => { const d2 = text(render(v.id)); return d2.querySelectorAll('.tile .ai').length === 0 && [...d2.querySelectorAll('.tile .s')].every(e => !/\bK\d{2}\b/.test(e.textContent)); }));
@@ -171,9 +171,9 @@ try {
   const pack = text(render('pack'));
   const body = pack.querySelector('.pack').textContent;
   ok('board pack carries the draft label, buttons and the key numbers',
-    !!pack.querySelector('#print-pack') && !!pack.querySelector('#download-pack') && /Human approval required/.test(pack.body.textContent) &&
+    !!pack.querySelector('#print-pack') && !!pack.querySelector('#download-pack') && /Draft for review/.test(pack.body.textContent) &&
     ['240%', '4.6h', '3.1h', '38%', '$73k', '7%', '$124.0M', '$120.0M', '+3.3%', '99.88%', '2 of 4', '17 critical', '88%', '$1.3M', '$2.50M'].every(s => body.includes(s)), body.slice(0, 300));
-  ok('board pack lists three decisions from the log and discloses the forecast and the proposed KPI', pack.querySelectorAll('.pack ol li').length === 3 && body.includes('Confirm patch window this week') && body.includes('trend-based forecast') && body.includes('proposed KPI'));
+  ok('board pack lists three decisions from the log and discloses the forecast', pack.querySelectorAll('.pack ol li').length === 3 && body.includes('Confirm patch window this week') && body.includes('trend-based forecast'));
 
   /* ================= accessibility refinements ================= */
   ok('data as-of date is available', D.dataAsOf() === '19 Oct 2026');
@@ -182,7 +182,7 @@ try {
   const aiCases = [['K17', 'incidentsW12', 'AI does real work here'], ['K06', 'budgetYtd', 'a person checks the result'], ['K16', 'servicesMeetingSla', 'only a small part'], ['K05', 'itSpendPct', 'no AI involved']];
   ok('evidence dialog explains the AI position in plain words (High, Medium, Low, None)', aiCases.every(([k, m, s]) => evidenceDialog(D.getEvidence(k, m, ROLE)).includes(s)));
   ok('highlighted incident bar and latest bar carry their numbers', [...text(render('ops')).querySelectorAll('.chart svg text')].some(t => t.textContent === '19') && [...text(render('ops')).querySelectorAll('.chart svg text')].some(t => t.textContent === '14'));
-  ok('line chart labels the peak and latest points', ['$265k', '$205k'].every(v => [...fin.querySelectorAll('.chart svg text')].some(t => t.textContent === v)));
+  ok('line chart labels the latest point with its number', [...text(render('ai')).querySelectorAll('.chart svg text')].some(t => t.textContent === '$48k'));
   ok('each error-budget bar has a text alternative', [...text(render('ops')).querySelectorAll('.ebt')].every(e => /% of the error budget used/.test(e.getAttribute('aria-label'))));
 
   /* ---- WCAG contrast of the colour tokens in styles.css (1.4.3 text 4.5:1, 1.4.11 controls 3:1) ---- */
@@ -214,6 +214,19 @@ try {
   const parse = s => { const [d, m, y] = s.split(' '); return new Date(`${m} ${d}, ${y}`); };
   const asOfDate = new Date('2026-10-19');
   ok('every decision is due after the data date, so nothing looks overdue on first view', decisions.every(s => parse(s) > asOfDate), decisions.join(', '));
+  /* ================= simplicity: no commentary, no clutter ================= */
+  const allPages = views.map(v => ({ id: v.id, doc: text(render(v.id)) }));
+  ok('tiles show a label, value, change and status only: no owner footer, and sub-lines only where they add a number', tileRefs.every(t => true) && allPages.every(p => [...p.doc.querySelectorAll('.tile')].every(el => !/Owner:/.test(el.textContent))) && allPages.flatMap(p => [...p.doc.querySelectorAll('.tile .s')]).length <= 6);
+  ok('banners are one short sentence under the headline (no paragraph)', allPages.filter(p => p.doc.querySelector('.briefing')).every(p => p.doc.querySelector('.briefing p').textContent.length <= 120), allPages.map(p => (p.doc.querySelector('.briefing p') || { textContent: '' }).textContent.length).join(','));
+  ok('no panel subtitle runs past one short line', allPages.every(p => [...p.doc.querySelectorAll('.panel .sub')].every(s => s.textContent.length <= 70)), allPages.flatMap(p => [...p.doc.querySelectorAll('.panel .sub')]).filter(s => s.textContent.length > 70).map(s => s.textContent).join(' | '));
+  ok('no author-facing labels on the page (KPI codes, "proposed KPI", "Google SRE")', allPages.every(p => !/\bK\d{2} ·|\bX\d{2} ·|Proposed KPI|Google SRE|AI reads the contract|The problem manager confirms/i.test(p.doc.body.textContent)));
+  ok('the page header has no instruction line, roadmap strip or access text', !page.includes('class="lede"') && !page.includes('class="road"') && !allPages.some(p => /Access:/.test(p.doc.body.textContent)));
+  const evHtml = evidenceDialog(D.getEvidence('K17', 'incidentsW12', ROLE));
+  ok('the detail pop-up leads with owner, source and date, and folds the reference detail', /Owner:.*Source:.*Data as of:/.test(evHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')) && evHtml.includes('<details class="more">') && evHtml.indexOf('Owner') < evHtml.indexOf('<details'));
+  ok('the detail pop-up has no disclaimer paragraph', !evHtml.includes('No live source is connected'));
+  ok('the decision pop-up has no instruction or disclaimer', !decisionDialog(D.getAction('A1', ROLE)).includes('Sample decision') && !decisionDialog(D.getAction('A1', ROLE)).includes('Check the supporting'));
+  ok('the restricted view is marked once, in the context line', D.getView('sec').restricted === true && views.filter(v => v.restricted).length === 1);
+  ok('cockpit decisions table has four columns, not five', cockpit.querySelectorAll('.panel table thead tr')[0].children.length === 4);
   const dash = String.fromCharCode(0x2014);
   ok('no em dash in any rendered view', views.every(v => !renderView(v, ROLE).includes(dash)));
   ok('escapeHtml neutralises markup', !escapeHtml('<img src=x onerror=alert(1)>').includes('<'));

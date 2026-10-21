@@ -7,6 +7,6 @@ export function doc({ title, sub, note, sections }) {
     (s.paragraphs || []).map(p => `<p>${esc(p)}</p>`).join('') +
     (s.list && s.list.length ? `<ol>${s.list.map(i => `<li><b>${esc(i.strong)}</b> ${esc(i.text)}</li>`).join('')}</ol>` : '')
   ).join('');
-  return `<div class="sh no-print"><span>Draft from sample data · Human approval required</span><div><button type="button" class="secondary" id="download-pack">Download draft</button> <button type="button" class="primary" id="print-pack">Print / save PDF</button></div></div>` +
-    `<article class="panel pack"><div class="eyebrow">EXECUTIVE BRIEFING · SAMPLE DATA</div><h2>${esc(title)}</h2><p class="muted">${esc(sub)}</p><div class="note">${esc(note)}</div>${body}</article>`;
+  return `<div class="sh no-print"><span>Draft for review</span><div><button type="button" class="secondary" id="download-pack">Download draft</button> <button type="button" class="primary" id="print-pack">Print / save PDF</button></div></div>` +
+    `<article class="panel pack"><h2>${esc(title)}</h2><p class="muted">${esc(sub)}</p>${note ? `<div class="note">${esc(note)}</div>` : ''}${body}</article>`;
 }

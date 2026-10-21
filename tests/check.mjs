@@ -94,7 +94,6 @@ const walk = (blocks, fn) => blocks.forEach(b => { fn(b); if (b.blocks) walk(b.b
   views.forEach(v => {
     if (!v.roles.length) problems.push(`view ${v.id} has no role`);
     v.roles.forEach(r => { if (!roleIds.includes(r)) problems.push(`view ${v.id}: unknown role ${r}`); });
-    if (!v.accessText) problems.push(`view ${v.id}: no accessText`);
   });
   roleIds.forEach(r => { if (!D.viewsFor(r).length) problems.push(`role ${r} opens no view`); });
   if (D.viewsFor(roles.default).length !== views.length) problems.push('default role cannot open all views');

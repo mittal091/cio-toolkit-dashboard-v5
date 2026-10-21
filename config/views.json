@@ -1,133 +1,114 @@
 [
   {
     "id": "cockpit", "name": "CIO cockpit", "roles": ["cio"],
-    "accessText": "CIO office, summary of all views",
     "blocks": [
-      { "type": "briefing", "eyebrow": "WEEK 12 EXECUTIVE BRIEFING · DEMO",
+      { "type": "briefing", "eyebrow": "Week 12",
         "headline": "Payments is over its error budget after release R-214.",
-        "text": "Payments has used {{K16:paymentsBudgetUsed}} of its budget. Cloud cost is still {{K07:vsW8}} above week 8, and the year is landing {{K06:landingVsPlan}} over plan.",
+        "text": "Cloud cost is still {{K07:vsW8}} above week 8 and the year is landing {{K06:landingVsPlan}} over plan.",
         "stat": { "value": "{{ds:attention:open}}", "label": "Decisions open", "note": "{{ds:attention:openCritical}} critical, {{ds:attention:openSoon}} due soon" } },
-      { "type": "section", "title": "Outcomes", "question": "Are we winning?" },
       { "type": "tiles", "items": [
         { "kpi": "K03", "metric": "onTime" },
-        { "kpi": "K06", "metric": "landing", "sub": "{{K06:landingVsPlan}} against plan" },
-        { "kpi": "K32", "metric": "measuredValue", "sub": "{{K32:measuredBenefit}} live use cases measured, against {{K35:annualised}} a year of AI spend" },
+        { "kpi": "K06", "metric": "landing", "sub": "{{K06:landingVsPlan}} vs plan" },
+        { "kpi": "K32", "metric": "measuredValue" },
         { "kpi": "K05", "metric": "itSpendPct" }
       ] },
       { "type": "table", "dataset": "attention",
-        "columns": ["item", "owner", "step", "due", "status"],
-        "title": "Needs your attention this week",
-        "subtitle": "Five items, each with an owner and a first step. Select an item for the decision.",
+        "columns": ["item", "owner", "due", "status"],
+        "title": "Needs your attention",
         "footer": [{ "kind": "go", "view": "actions", "text": "Open the decision log" }] },
-      { "type": "section", "title": "Drivers", "question": "Is the machine running?" },
       { "type": "errorbudget", "dataset": "availability",
         "target": { "kpi": "K16", "metric": "target" }, "policy": { "kpi": "K16", "key": "policy" },
         "title": "Critical services: error budget used",
-        "subtitle": "Availability over 12 weeks against the {{K16:target}} target. The budget is the downtime a service may have.",
-        "note": "Past 100% of its budget, a service should freeze non-essential releases until reliability work restores it. This is the Google SRE practice. The service owner decides." },
+        "subtitle": "Last 12 weeks" },
       { "type": "table", "dataset": "one-event",
         "title": "One event, seen by each role",
-        "subtitle": "Release R-214 in week 9. Click a role to open its view." },
+        "subtitle": "Release R-214, week 9" },
       { "type": "ask" }
     ]
   },
   {
     "id": "fin", "name": "Finance and FinOps", "roles": ["finance", "cio"],
-    "accessText": "Finance, FinOps, Procurement, CIO office",
     "blocks": [
-      { "type": "briefing", "eyebrow": "FINANCE AND FINOPS · WEEK 12",
+      { "type": "briefing", "eyebrow": "Week 12",
         "headline": "Cloud cost is back near week 8, but the year is landing {{K06:landingVsPlan}} over plan.",
-        "text": "Cloud spend peaked at {{K07:weekly:at(8)}} in week 9 after release R-214 and is {{K07:weekly:last}} now, still {{K07:vsW8}} above week 8. At the current run-rate the year lands at {{K06:landing}} against a plan of {{K06:fullYearPlan}}. Two contract notices fall due before year end." },
+        "text": "Cloud spend peaked at {{K07:weekly:at(8)}} in week 9 and is {{K07:weekly:last}} now. The forecast is {{K06:landing}} against a {{K06:fullYearPlan}} plan." },
       { "type": "tiles", "items": [
         { "kpi": "K07", "metric": "spend12w" },
-        { "kpi": "K06", "metric": "landing", "sub": "{{K06:landingVsPlan}} against plan" },
-        { "kpi": "K07", "metric": "wasteShare", "sub": "waste share" },
+        { "kpi": "K06", "metric": "landing", "sub": "{{K06:landingVsPlan}} vs plan" },
+        { "kpi": "K07", "metric": "wasteShare" },
         { "kpi": "K09", "metric": "renewals" }
       ] },
       { "type": "row", "columns": 2, "blocks": [
-        { "type": "chart", "kind": "line", "kpi": "K07", "series": "weekly",
-          "title": "Cloud spend per week, W1 to W12 ($k)", "subtitle": "K07 · daily data, weekly view",
-          "options": { "min": 150, "max": 300, "step": 50, "area": true, "marker": true, "color": "cyan", "aria": "Cloud spend per week" } },
         { "type": "chart", "kind": "waterfall", "dataset": "cloud-waterfall",
           "title": "Why cloud cost is {{K07:vsW8}} above week 8",
-          "subtitle": "Cloud spend, week 8 to week 12 ($k)",
-          "footnote": "Sources: billing export W9, change record CHG-3391. Ask the question below to see them.",
-          "options": { "unit": "usd_k", "max": 300, "step": 50, "aria": "Cloud spend bridge from week 8 to week 12" } }
+          "subtitle": "Week 8 to week 12 ($k)",
+          "options": { "unit": "usd_k", "max": 300, "step": 50, "aria": "Cloud spend bridge from week 8 to week 12" } },
+        { "type": "table", "dataset": "renewals", "columns": ["contract", "notice", "status"],
+          "title": "Contract renewals" }
       ] },
       { "type": "chart", "kind": "scenario", "kpi": "K06", "actual": "monthlyActual", "plan": "monthlyBudget",
         "title": "IT spend against plan, April to March ($M)",
-        "subtitle": "AC actual, FC trend forecast, PL plan. Pins show the difference to plan. The forecast adds the last three months' average to each month still to come.",
+        "subtitle": "Actual, forecast and plan. Pins show the difference to plan.",
         "options": { "max": 12, "step": 3, "aria": "IT spend against plan with forecast to year end" } },
-      { "type": "table", "dataset": "renewals",
-        "title": "Contract renewals",
-        "subtitle": "K09 · AI reads the contract PDFs. Legal reviews before any action." },
       { "type": "ask" }
     ]
   },
   {
     "id": "ops", "name": "Operations", "roles": ["ops", "cio"],
-    "accessText": "Operations, service owners, CIO office",
     "blocks": [
-      { "type": "briefing", "eyebrow": "OPERATIONS · WEEK 12",
+      { "type": "briefing", "eyebrow": "Week 12",
         "headline": "Payments is out of error budget. Recovery after R-214 is under way.",
-        "text": "Payments has used {{K16:paymentsBudgetUsed}} of its error budget, so the release policy says to freeze non-essential releases until reliability work restores it. MTTR is {{K17:mttr:last}}, down from {{K17:mttr:at(8)}} in week 9." },
+        "text": "MTTR is {{K17:mttr:last}}, down from {{K17:mttr:at(8)}} in week 9." },
       { "type": "tiles", "items": [
-        { "kpi": "K16", "metric": "overBudget", "sub": "critical services" },
-        { "kpi": "K17", "metric": "incidentsW12", "sub": "W9 peak was {{K17:incidents:at(8)}}" },
-        { "kpi": "K17", "metric": "mttrW12", "sub": "was {{K17:mttr:at(8)}} in W9" },
+        { "kpi": "K16", "metric": "overBudget" },
+        { "kpi": "K17", "metric": "incidentsW12" },
+        { "kpi": "K17", "metric": "mttrW12" },
         { "kpi": "K17", "metric": "clusters" }
       ] },
       { "type": "row", "columns": 2, "blocks": [
         { "type": "chart", "kind": "bar", "kpi": "K17", "series": "incidents",
-          "title": "P1/P2 incidents per week, W1 to W12", "subtitle": "K17",
+          "title": "P1/P2 incidents per week", "subtitle": "W1 to W12",
           "options": { "min": 0, "max": 20, "step": 5, "color": "blue", "highlight": "markers", "highlightColor": "red", "aria": "Incidents per week" } },
         { "type": "errorbudget", "dataset": "availability",
           "target": { "kpi": "K16", "metric": "target" }, "policy": { "kpi": "K16", "key": "policy" },
-          "title": "Error budget used, W1 to W12",
-          "subtitle": "K16 · against the {{K16:target}} target",
-          "note": "The service owner decides whether to freeze releases." }
+          "title": "Error budget used", "subtitle": "Last 12 weeks" }
       ] },
       { "type": "table", "dataset": "repeat-incidents",
-        "title": "Repeat incidents",
-        "subtitle": "K17 · AI groups tickets by text and suggests a link. The problem manager confirms it." },
+        "title": "Repeat incidents" },
       { "type": "ask" }
     ]
   },
   {
     "id": "del", "name": "Delivery and Engineering", "roles": ["delivery", "cio"],
-    "accessText": "PMO, Engineering leads, CIO office",
     "blocks": [
-      { "type": "briefing", "eyebrow": "DELIVERY AND ENGINEERING · WEEK 12",
-        "headline": "Two projects report Green but show risk signals, and Payments delivery is less stable since R-214.",
-        "text": "{{K14:flagged}} of {{K14:total}} projects need a PM check. The change fail rate on the Payments platform is {{X01:changeFailRate}} after peaking at {{X01:changeFailRate:at(8)}} with release R-214. Speed and stability are read together, and not set as targets." },
+      { "type": "briefing", "eyebrow": "Week 12",
+        "headline": "Two projects report Green but show risk signals.",
+        "text": "The Payments change fail rate is {{X01:changeFailRate}}, after peaking at {{X01:changeFailRate:at(8)}} with release R-214." },
       { "type": "tiles", "items": [
         { "kpi": "K03", "metric": "onTime" },
-        { "kpi": "K14", "metric": "flagged", "label": "AI-flagged \"green but at risk\"", "sub": "PM to confirm" },
-        { "kpi": "X01", "metric": "changeFailRate", "sub": "share of deployments needing a fix" },
+        { "kpi": "K14", "metric": "flagged", "label": "AI-flagged \"green but at risk\"" },
+        { "kpi": "X01", "metric": "changeFailRate" },
         { "kpi": "X01", "metric": "recoveryTime" }
       ] },
       { "type": "table", "dataset": "project-health",
-        "title": "Green data, red narrative",
-        "subtitle": "K14 · AI compares what the status reports say with the reported colour" },
+        "title": "Green data, red narrative" },
       { "type": "row", "columns": 2, "blocks": [
         { "type": "chart", "kind": "bar", "kpi": "K11", "series": "deploysWeekly",
-          "title": "Deployments per week, all services, W1 to W12", "subtitle": "K11 · speed. Read it with the change fail rate",
+          "title": "Deployments per week", "subtitle": "All services, last 12 weeks",
           "options": { "min": 0, "max": 50, "step": 10, "color": "blue", "aria": "Deployments per week" } },
         { "type": "chart", "kind": "line", "kpi": "X01", "series": "changeFailRate",
-          "title": "Change fail rate per week, Payments platform (%), W1 to W12", "subtitle": "X01 · stability. Proposed KPI, not yet in the catalogue",
+          "title": "Change fail rate per week (%)", "subtitle": "Payments platform, last 12 weeks",
           "options": { "min": 0, "max": 20, "step": 5, "marker": true, "color": "amber", "aria": "Change fail rate per week" } }
       ] },
       { "type": "ask" }
     ]
   },
   {
-    "id": "sec", "name": "Security and Risk", "roles": ["security", "cio"],
-    "accessText": "Restricted: CISO, Risk and Compliance, CIO office",
+    "id": "sec", "name": "Security and Risk", "roles": ["security", "cio"], "restricted": true,
     "blocks": [
-      { "type": "note", "tone": "warn", "text": "Restricted view. The Ask panel answers only with the access of the person asking." },
-      { "type": "briefing", "eyebrow": "SECURITY AND RISK · WEEK 12",
+      { "type": "briefing", "eyebrow": "Week 12",
         "headline": "The Payments gateway patch SLA is breached.",
-        "text": "{{K20:criticalOpen}} critical vulnerabilities are open and {{K20:patchedInSla}} were patched within SLA, against a {{K20:patchTarget}} target. {{K24:overdue}} audit findings are overdue." },
+        "text": "{{K20:criticalOpen}} critical vulnerabilities are open. {{K20:patchedInSla}} were patched within SLA, against a {{K20:patchTarget}} target." },
       { "type": "tiles", "items": [
         { "kpi": "K20", "metric": "criticalOpen" },
         { "kpi": "K20", "metric": "patchedInSla" },
@@ -135,73 +116,66 @@
         { "kpi": "K24", "metric": "overdue", "sub": "{{K24:high}} high, {{K24:medium}} medium" }
       ] },
       { "type": "table", "dataset": "patch-priority",
-        "title": "Patch priority",
-        "subtitle": "K20 · AI ranks by exploitability and asset criticality. The CISO decides." },
+        "title": "Patch priority" },
       { "type": "ask" }
     ]
   },
   {
     "id": "ai", "name": "AI and Data", "roles": ["ai", "finance", "cio"],
-    "accessText": "AI and Data lead, FinOps, CIO office",
     "blocks": [
-      { "type": "briefing", "eyebrow": "AI AND DATA · WEEK 12",
+      { "type": "briefing", "eyebrow": "Week 12",
         "headline": "AI spend runs ahead of proven value.",
-        "text": "Only {{K32:measuredValue}} a year of benefit is measured against a baseline, against {{K35:annualised}} a year of AI spend at the current rate. Another {{K32:estimatedValue}} a year is estimated and unproven." },
+        "text": "{{K32:measuredValue}} a year of benefit is measured, against {{K35:annualised}} a year of AI spend." },
       { "type": "tiles", "items": [
         { "kpi": "K31", "metric": "useCases", "sub": "{{K31:ideas}} ideas, {{K31:pilots}} pilots, {{K31:live}} live" },
-        { "kpi": "K32", "metric": "activeUsers", "sub": "{{K32:growth}} in 4 weeks" },
-        { "kpi": "K32", "metric": "measuredValue", "sub": "{{K32:measuredBenefit}} live use cases measured" },
-        { "kpi": "K35", "metric": "llmSpendWeek", "sub": "{{K35:annualised}} a year at this rate" }
+        { "kpi": "K32", "metric": "activeUsers" },
+        { "kpi": "K32", "metric": "measuredValue" },
+        { "kpi": "K35", "metric": "llmSpendWeek" }
       ] },
       { "type": "row", "columns": 2, "blocks": [
         { "type": "chart", "kind": "line", "kpi": "K35", "series": "llmSpendWeekly",
-          "title": "AI / LLM spend per week, W1 to W12 ($k)", "subtitle": "K35 · anomaly and forecast",
-          "options": { "min": 10, "max": 50, "step": 10, "area": true, "color": "purple", "aria": "AI and LLM spend per week" } },
+          "title": "AI spend per week ($k)", "subtitle": "W1 to W12",
+          "options": { "min": 10, "max": 50, "step": 10, "area": true, "color": "purple", "aria": "AI spend per week" } },
         { "type": "table", "dataset": "ai-value",
-          "title": "Live use cases: measured and estimated benefit",
-          "subtitle": "{{K32:measuredBenefit}} have a documented baseline. A benefit with no baseline is an estimate." }
+          "title": "Live use cases: measured or estimated benefit" }
       ] },
       { "type": "ask" }
     ]
   },
   {
     "id": "actions", "name": "Decision log", "group": "Act", "roles": ["cio"],
-    "accessText": "CIO office",
     "blocks": [
-      { "type": "note", "tone": "info", "text": "Track the five executive priorities. Status changes are saved in this browser for the demo." },
       { "type": "table", "dataset": "attention",
         "columns": ["item", "owner", "outcome", "due", "statusEdit"],
-        "title": "Executive action tracker",
-        "subtitle": "Each action has an owner, a due date and an intended outcome. Select an item for the decision.",
-        "footer": [{ "kind": "button", "id": "reset-actions", "text": "Reset demo" }] }
+        "title": "Decision log",
+        "subtitle": "Status changes are saved in this browser.",
+        "footer": [{ "kind": "button", "id": "reset-actions", "text": "Reset" }] }
     ]
   },
   {
     "id": "pack", "name": "Board pack", "group": "Act", "roles": ["cio"],
-    "accessText": "CIO office",
     "blocks": [
-      { "type": "doc", "title": "CIO Toolkit executive briefing", "sub": "Week 12 · Draft for review",
-        "note": "Demonstration pack. Every number and source in this draft is illustrative. No live enterprise data or AI service is connected.",
+      { "type": "doc", "title": "Executive briefing", "sub": "Week 12",
         "sections": [
-          { "heading": "Executive assessment",
+          { "heading": "Summary",
             "paragraphs": [
-              "Release R-214 in week 9 affected reliability, cost, delivery and security. Payments has used {{K16:paymentsBudgetUsed}} of its error budget. MTTR peaked at {{K17:mttr:at(8)}} and is back to {{K17:mttr:last}}. Cloud cost rose {{K07:spikeW9}} ({{K07:spikeAmt}}) in week 9 and is still {{K07:vsW8}} above week 8.",
-              "At the current run-rate the year lands at {{K06:landing}} against a plan of {{K06:fullYearPlan}} ({{K06:landingVsPlan}}). Year-to-date spend is {{K06:budgetYtd}} against plan ({{K06:ytdActual}} against {{K06:ytdBudget}})."
+              "Release R-214 in week 9 hit reliability, cost and delivery. Payments has used {{K16:paymentsBudgetUsed}} of its error budget. MTTR peaked at {{K17:mttr:at(8)}} and is back to {{K17:mttr:last}}. Cloud cost rose {{K07:spikeW9}} ({{K07:spikeAmt}}) in week 9 and is still {{K07:vsW8}} above week 8.",
+              "The year is landing at {{K06:landing}} against a {{K06:fullYearPlan}} plan ({{K06:landingVsPlan}}). Year to date, spend is {{K06:budgetYtd}} over plan ({{K06:ytdActual}} against {{K06:ytdBudget}})."
             ] },
           { "heading": "Decisions requested", "decisions": { "dataset": "attention", "limit": 3 } },
-          { "heading": "Operations and service",
-            "paragraphs": ["{{K16:overBudget}} critical services are over their error budget. Payments availability is {{K16:paymentsAvailability}} against a {{K16:target}} target. P1 and P2 incidents in week 12: {{K17:incidents:last}}."] },
-          { "heading": "Value and financial discipline",
-            "paragraphs": ["Renewals due in the next 6 to 12 months: {{K09:renewals}}. The Observability platform (notice by 15 Nov 2026) and ERP licences (notice by 20 Dec 2026) both carry price uplifts of 7% or more. Cloud waste is {{K07:wasteShare}} of spend and needs FinOps validation before action."] },
+          { "heading": "Operations",
+            "paragraphs": ["{{K16:overBudget}} critical services are over their error budget. Payments availability is {{K16:paymentsAvailability}} against a {{K16:target}} target."] },
+          { "heading": "Cost",
+            "paragraphs": ["Renewals due in the next 6 to 12 months: {{K09:renewals}}. The Observability platform (notice by 15 Nov 2026) and ERP licences (notice by 20 Dec 2026) carry price uplifts of 7% or more. Cloud waste is {{K07:wasteShare}} of spend."] },
           { "heading": "Security and delivery",
             "paragraphs": [
-              "{{K20:criticalOpen}} critical vulnerabilities are open and {{K20:patchedInSla}} were patched within SLA against a {{K20:patchTarget}} target. {{K24:overdue}} audit findings are overdue ({{K24:high}} high, {{K24:medium}} medium).",
-              "{{K14:flagged}} of {{K14:total}} projects are reported Green but show risk signals. The change fail rate on the Payments platform is {{X01:changeFailRate}}."
+              "{{K20:criticalOpen}} critical vulnerabilities are open and {{K20:patchedInSla}} were patched within SLA against a {{K20:patchTarget}} target. {{K24:overdue}} audit findings are overdue.",
+              "{{K14:flagged}} of {{K14:total}} projects are reported Green but show risk signals. The Payments change fail rate is {{X01:changeFailRate}}."
             ] },
           { "heading": "AI",
-            "paragraphs": ["LLM spend reached {{K35:llmSpendWeekly:last}} last week, or {{K35:annualised}} a year at that rate. Measured benefit is {{K32:measuredValue}} a year, with another {{K32:estimatedValue}} estimated. {{K32:measuredBenefit}} live use cases are measured against a baseline."] },
-          { "heading": "Trust and open issues",
-            "paragraphs": ["All figures are illustrative and have not come from connected sources. The year-end landing is a trend-based forecast, not an approved one. The change fail rate (X01) is a proposed KPI that is not yet in the KPI catalogue. Approval: pending CIO and Finance review."] }
+            "paragraphs": ["LLM spend is {{K35:annualised}} a year at the current rate. Measured benefit is {{K32:measuredValue}} a year, with another {{K32:estimatedValue}} estimated."] },
+          { "heading": "Notes",
+            "paragraphs": ["All figures are illustrative. The year-end landing is a trend-based forecast, not an approved one. Approval pending."] }
         ] }
     ]
   }

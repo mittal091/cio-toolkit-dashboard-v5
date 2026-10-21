@@ -52,9 +52,9 @@ function show(id) {
   /* one quiet line of context instead of a row of pills, with a jump to the Ask panel where there is one */
   const asOf = D.dataAsOf();
   metaEl.innerHTML =
-    `<span><b>Access:</b> ${esc(v.accessText)} · last 12 weeks</span>` +
-    (asOf ? `<span><b>Data as of:</b> ${esc(asOf)} · simulated</span>` : '') +
-    (hasTiles(v) ? '<span>▲▼ change since the previous week or month</span>' : '') +
+    (asOf ? `<span><b>Data as of</b> ${esc(asOf)} · simulated</span>` : '') +
+    (v.restricted ? '<span><b>Restricted view</b></span>' : '') +
+    (hasTiles(v) ? '<span>▲▼ vs previous period</span>' : '') +
     (v.blocks.some(b => b.type === 'ask') ? '<button type="button" class="link askjump" data-askjump>Ask a question ↓</button>' : '');
   viewEl.innerHTML = renderView(v, role);
 
